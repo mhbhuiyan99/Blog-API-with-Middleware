@@ -1,21 +1,28 @@
 package cmd
 
 import (
-	"blogAPI/global_router"
-	"blogAPI/handlers"
+	"blogAPI/middleware"
 	"fmt"
 	"net/http"
 )
 
 func Serve() {
-	mux := http.NewServeMux()
 
-	mux.Handle("GET /posts", http.HandlerFunc(handlers.GetPosts))
-	mux.Handle("POST /posts", http.HandlerFunc(handlers.CreatePost))
-	mux.Handle("GET /posts/{postId}", http.HandlerFunc(handlers.GetPostByID))
+	manager := middleware.NewManager()
+
+	manager.Use(
+		middleware.Preflight,
+		middleware.Cors,
+		middleware.Logger,
+	)
+
+	mux := http.NewServeMux()
+	wrappedMux := manager.WrapMux(mux)
+
+	initRoutes(mux, manager)
 
 	fmt.Println("Server is running on port 4000")
-	err := http.ListenAndServe(":4000", global_router.GlobalRouter(mux))
+	err := http.ListenAndServe(":4000", wrappedMux)
 	if err != nil {
 		fmt.Println("Error starting the server: ", err)
 	}
