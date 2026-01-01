@@ -16,7 +16,7 @@ func CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newPost.ID = len(database.PostList) + 1
-	database.PostList = append(database.PostList, newPost)
+	newPost.ID = len(database.List()) + 1
+	database.Store(newPost)
 	util.SendData(w, newPost, 201)
 }

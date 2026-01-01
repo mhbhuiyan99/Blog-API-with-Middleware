@@ -4,3 +4,7 @@ Why This Project?
 3. Authorization (only author can edit/delete their posts)
 4. File uploads (blog post images - optional)
 
+----
+
+**Loads env vars from a .env file:** <br>
+```go get github.com/joho/godotenv```

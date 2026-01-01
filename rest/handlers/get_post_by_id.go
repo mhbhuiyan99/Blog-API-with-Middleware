@@ -16,7 +16,7 @@ func GetPostByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, post := range database.PostList {
+	for _, post := range database.List() {
 		if post.ID == pId {
 			util.SendData(w, post, 200)
 			return

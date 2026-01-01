@@ -9,5 +9,5 @@ import (
 
 func GetPosts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GetPosts handler called")
-	util.SendData(w, database.PostList, 200)
+	util.SendData(w, database.List(), 200)
 }

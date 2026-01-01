@@ -1,29 +1,14 @@
 package cmd
 
 import (
-	"blogAPI/middleware"
-	"fmt"
-	"net/http"
+	"blogAPI/config"
+	"blogAPI/rest"
 )
 
 func Serve() {
 
-	manager := middleware.NewManager()
+	cnf :=config.GetConfig() // Load configuration
 
-	manager.Use(
-		middleware.Preflight,
-		middleware.Cors,
-		middleware.Logger,
-	)
-
-	mux := http.NewServeMux()
-	wrappedMux := manager.WrapMux(mux)
-
-	initRoutes(mux, manager)
-
-	fmt.Println("Server is running on port 4000")
-	err := http.ListenAndServe(":4000", wrappedMux)
-	if err != nil {
-		fmt.Println("Error starting the server: ", err)
-	}
+	rest.Start(cnf) // Start the REST server
+	
 }

@@ -1,6 +1,6 @@
 package database
 
-var PostList []Post
+var postList []Post
 
 type Post struct {
 	ID      int    `json:"id"`
@@ -11,4 +11,12 @@ type Post struct {
 	Tags    []string `json:"tags"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
+}
+
+func Store(p Post) {
+	postList = append(postList, p)
+}
+
+func List() []Post {
+	return postList
 }

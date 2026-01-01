@@ -1,8 +1,8 @@
-package cmd
+package rest
 
 import (
-	"blogAPI/handlers"
-	"blogAPI/middleware"
+	"blogAPI/rest/handlers"
+	"blogAPI/rest/middleware"
 	"net/http"
 )
 
