@@ -1,4 +1,4 @@
-package handlers
+package post
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	"blogAPI/util"
 )
 
-func GetPostByID(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetPostByID(w http.ResponseWriter, r *http.Request) {
 	postID := r.PathValue("postId")
 
 	pId, err := strconv.Atoi(postID)

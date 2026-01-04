@@ -1,43 +1,42 @@
-package rest
+package post
 
 import (
-	"blogAPI/rest/handlers"
-	"blogAPI/rest/middleware"
+	middleware "blogAPI/rest/middlewares"
 	"net/http"
 )
 
-func initRoutes(mux *http.ServeMux, manager *middleware.Manager) {
+func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager) {
 	mux.Handle(
 		"GET /posts", 
 		manager.With(
-			http.HandlerFunc(handlers.GetPosts),
+			http.HandlerFunc(h.GetPosts),
 	))
 
 	mux.Handle(
 		"POST /posts", 
 		manager.With(
-			http.HandlerFunc(handlers.CreatePost),
-			middleware.AuthenticateJWT,
+			http.HandlerFunc(h.CreatePost),
+			h.middlewares.AuthenticateJWT,
 	))
 
 	mux.Handle(
 		"GET /posts/{id}", 
 		manager.With(
-			http.HandlerFunc(handlers.GetPostByID),
+			http.HandlerFunc(h.GetPostByID),
 	))
 	/*
 	mux.Handle(
 		"PUT /posts/{id}", 
 		manager.With(
 			http.HandlerFunc(handlers.UpdatePost),
-			middleware.AuthenticateJWT,
+			h.middlewares.AuthenticateJWT,
 	))
 
 	mux.Handle(
 		"DELETE /posts/{id}", 
 		manager.With(
 			http.HandlerFunc(handlers.DeletePost),
-			middleware.AuthenticateJWT,
+			h.middlewares.AuthenticateJWT,
 	))
 	*/			
 }

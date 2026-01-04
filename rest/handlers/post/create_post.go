@@ -1,4 +1,4 @@
-package handlers
+package post
 
 import (
 	"blogAPI/database"
@@ -7,10 +7,8 @@ import (
 	"net/http"
 )
 
-func CreatePost(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	
-	
-
 
 	var newPost database.Post
 	decoder := json.NewDecoder(r.Body)

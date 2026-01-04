@@ -1,4 +1,4 @@
-package handlers
+package post
 
 import (
 	"blogAPI/database"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func GetPosts(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetPosts(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("GetPosts handler called")
 	util.SendData(w, database.List(), 200)
 }
