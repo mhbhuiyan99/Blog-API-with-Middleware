@@ -17,11 +17,27 @@ func initRoutes(mux *http.ServeMux, manager *middleware.Manager) {
 		"POST /posts", 
 		manager.With(
 			http.HandlerFunc(handlers.CreatePost),
+			middleware.AuthenticateJWT,
 	))
 
 	mux.Handle(
-		"GET /posts/{postId}", 
+		"GET /posts/{id}", 
 		manager.With(
 			http.HandlerFunc(handlers.GetPostByID),
 	))
+	/*
+	mux.Handle(
+		"PUT /posts/{id}", 
+		manager.With(
+			http.HandlerFunc(handlers.UpdatePost),
+			middleware.AuthenticateJWT,
+	))
+
+	mux.Handle(
+		"DELETE /posts/{id}", 
+		manager.With(
+			http.HandlerFunc(handlers.DeletePost),
+			middleware.AuthenticateJWT,
+	))
+	*/			
 }

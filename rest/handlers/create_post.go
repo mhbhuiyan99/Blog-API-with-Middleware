@@ -1,13 +1,17 @@
 package handlers
 
 import (
-	"encoding/json"
-	"net/http"
 	"blogAPI/database"
 	"blogAPI/util"
+	"encoding/json"
+	"net/http"
 )
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {
+	
+	
+
+
 	var newPost database.Post
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newPost)
