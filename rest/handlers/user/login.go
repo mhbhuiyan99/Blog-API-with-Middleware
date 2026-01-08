@@ -1,8 +1,6 @@
 package user
 
 import (
-	"blogAPI/config"
-	"blogAPI/database"
 	"blogAPI/util"
 	"encoding/json"
 	"net/http"
@@ -14,23 +12,21 @@ type RequestLogin struct {
 }
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
-	var reqLogin RequestLogin
+	var req RequestLogin
 	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&reqLogin)
+	err := decoder.Decode(&req)
 	if err != nil {
-		http.Error(w, "Invalid request Data", http.StatusBadRequest)
+		util.SendError(w, "Invalid request Data", http.StatusBadRequest)
 		return
 	}
 
-	usr := database.Find(reqLogin.Email, reqLogin.Password)
-	if usr == nil {
-		http.Error(w, "Invalid email or password", http.StatusUnauthorized)
+	usr, err := h.userRepo.Find(req.Email, req.Password)
+	if err != nil {
+		util.SendError(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 
-	cnf := config.GetConfig()
-
-	accessToken, err := util.CreateJWT(cnf.JwtSecretKey, util.Payload{
+	accessToken, err := util.CreateJWT(h.cnf.JwtSecretKey, util.Payload{
 		Sub:      usr.ID,
 		IsWriter: usr.IsWriter,
 		Username: usr.Username,

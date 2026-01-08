@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"blogAPI/config"
+	"blogAPI/repo"
 	"blogAPI/rest"
 	"blogAPI/rest/handlers/post"
 	"blogAPI/rest/handlers/user"
@@ -14,8 +15,11 @@ func Serve() {
 
 	middlewares := middleware.NewMiddlewares(cnf)
 
-	postHandler := post.NewHandler(middlewares)
-	userHandler := user.NewHandler(middlewares)
+	postRepo := repo.NewPostRepo()
+	userRepo := repo.NewUserRepo()
+
+	postHandler := post.NewHandler(middlewares, postRepo)
+	userHandler := user.NewHandler(cnf, userRepo)
 
 	server := rest.NewServer(
 		cnf, 

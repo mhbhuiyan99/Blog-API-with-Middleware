@@ -1,13 +1,21 @@
 package user
 
-import middleware "blogAPI/rest/middlewares"
+import (
+	"blogAPI/config"
+	"blogAPI/repo"
+)
 
 type Handler struct {
-	middlewares *middleware.Middlewares
+	cnf   		*config.Config
+	userRepo    repo.UserRepo
 }
 
-func NewHandler(middlewares *middleware.Middlewares) *Handler {
+func NewHandler(
+	cnf 		*config.Config,
+	userRepo 	repo.UserRepo,
+) *Handler {
 	return &Handler{
-		middlewares: middlewares,
+		cnf:         cnf,
+		userRepo:    userRepo,
 	}
 }

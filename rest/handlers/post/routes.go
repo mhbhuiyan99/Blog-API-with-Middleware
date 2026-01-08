@@ -22,7 +22,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager
 	mux.Handle(
 		"GET /posts/{id}", 
 		manager.With(
-			http.HandlerFunc(h.GetPostByID),
+			http.HandlerFunc(h.GetPost),
 	))
 	/*
 	mux.Handle(
