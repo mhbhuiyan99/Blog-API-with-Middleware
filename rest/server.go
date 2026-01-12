@@ -12,18 +12,18 @@ import (
 )
 
 type Server struct {
-	cnf 		*config.Config
+	cnf         *config.Config
 	postHandler *post.Handler
 	userHandler *user.Handler
 }
 
 func NewServer(
-	cnf 		*config.Config,
-	postHandler *post.Handler, 
+	cnf *config.Config,
+	postHandler *post.Handler,
 	userHandler *user.Handler,
 ) *Server {
 	return &Server{
-		cnf: 		 cnf,
+		cnf:         cnf,
 		postHandler: postHandler,
 		userHandler: userHandler,
 	}

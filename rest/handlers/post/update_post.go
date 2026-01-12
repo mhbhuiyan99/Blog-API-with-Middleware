@@ -9,10 +9,10 @@ import (
 )
 
 type ReqUpdatePost struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
-	Category string `json:"category"`
-	Tags    []string `json:"tags"`
+	Title    string   `json:"title"`
+	Content  string   `json:"content"`
+	Category string   `json:"category"`
+	Tags     []string `json:"tags"`
 }
 
 func (h *Handler) UpdatePost(w http.ResponseWriter, r *http.Request) {
@@ -34,11 +34,11 @@ func (h *Handler) UpdatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err = h.postRepo.Update(repo.Post{
-		ID:      pId,
-		Title:   req.Title,
-		Content: req.Content,
+		ID:       pId,
+		Title:    req.Title,
+		Content:  req.Content,
 		Category: req.Category,
-		Tags:    req.Tags,
+		Tags:     req.Tags,
 	})
 
 	if err != nil {

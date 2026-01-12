@@ -10,9 +10,9 @@ import (
 
 type ReqCreateUser struct {
 	Username string `json:"username"`
-	Email	string `json:"email"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
-	IsWriter bool `json:"is_writer"`
+	IsWriter bool   `json:"is_writer"`
 }
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +27,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	usr, err := h.userRepo.Create(repo.User{
 		Username: req.Username,
-		Email: req.Email,
+		Email:    req.Email,
 		Password: req.Password,
 		IsWriter: req.IsWriter,
 	})

@@ -7,7 +7,7 @@ type Middlewares struct {
 }
 
 func NewMiddlewares(cnf *config.Config) *Middlewares {
-	return &Middlewares {
-		cnf : cnf,
+	return &Middlewares{
+		cnf: cnf,
 	}
 }

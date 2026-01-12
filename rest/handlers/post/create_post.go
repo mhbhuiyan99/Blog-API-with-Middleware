@@ -4,18 +4,26 @@ import (
 	"blogAPI/repo"
 	"blogAPI/util"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
 type ReqCreatePost struct {
-	Title   string `json:"title"`
-	Content string `json:"content"`
-	Category string `json:"category"`
-	Tags    []string `json:"tags"`
+	Title     string   `json:"title"`
+	Content   string   `json:"content"`
+	Category  string   `json:"category"`
+	Tags      []string `json:"tags"`
+	Published bool     `json:"published"`
 }
 
 func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
-	
+
+	// Get the user ID from the context (set by the authentication middleware)
+	userID, ok := r.Context().Value("user_id").(int)
+	if !ok {
+		util.SendError(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
 
 	var req ReqCreatePost
 	decoder := json.NewDecoder(r.Body)
@@ -26,15 +34,19 @@ func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	createPost, err := h.postRepo.Create(repo.Post{
-		Title: req.Title,
-		Content: req.Content,
+		UserID:   userID,
+		Title:    req.Title,
+		Content:  req.Content,
 		Category: req.Category,
-		Tags: req.Tags,
+		Tags:     req.Tags,
+		Published: req.Published,
 	})
+	
 	if err != nil {
+		fmt.Println("Failed to create post:", err)
 		util.SendError(w, "Failed to create post", http.StatusInternalServerError)
 		return
 	}
-	
+
 	util.SendData(w, createPost, http.StatusCreated)
 }
