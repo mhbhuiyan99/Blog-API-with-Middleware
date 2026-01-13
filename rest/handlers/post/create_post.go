@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/lib/pq"
 )
 
 type ReqCreatePost struct {
@@ -34,14 +36,14 @@ func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	createPost, err := h.postRepo.Create(repo.Post{
-		UserID:   userID,
-		Title:    req.Title,
-		Content:  req.Content,
-		Category: req.Category,
-		Tags:     req.Tags,
+		UserID:    userID,
+		Title:     req.Title,
+		Content:   req.Content,
+		Category:  req.Category,
+		Tags:      pq.StringArray(req.Tags),
 		Published: req.Published,
 	})
-	
+
 	if err != nil {
 		fmt.Println("Failed to create post:", err)
 		util.SendError(w, "Failed to create post", http.StatusInternalServerError)

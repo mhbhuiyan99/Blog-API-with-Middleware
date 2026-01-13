@@ -15,7 +15,6 @@ type Payload struct {
 	Sub      int    `json:"sub"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
-	IsWriter bool   `json:"is_writer"`
 }
 
 /*

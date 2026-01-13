@@ -11,17 +11,17 @@ import (
 )
 
 type Post struct {
-	ID        int       `json:"id" db:"id"`
-	UserID    int       `json:"user_id" db:"user_id"`
-	Title     string    `json:"title" db:"title"`
-	Slug      string    `json:"slug" db:"slug"`
-	Content   string    `json:"content" db:"content"`
-	ImgURL    string    `json:"img_url" db:"image_url"`
-	Category  string    `json:"category" db:"category"`
-	Tags      []string  `json:"tags" db:"tags"`
-	Published bool      `json:"published" db:"published"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	ID        int            `json:"id" db:"id"`
+	UserID    int            `json:"user_id" db:"user_id"`
+	Title     string         `json:"title" db:"title"`
+	Slug      string         `json:"slug" db:"slug"`
+	Content   string         `json:"content" db:"content"`
+	ImgURL    string         `json:"img_url" db:"image_url"`
+	Category  string         `json:"category" db:"category"`
+	Tags      pq.StringArray `json:"tags" db:"tags"`
+	Published bool           `json:"published" db:"published"`
+	CreatedAt time.Time      `json:"created_at" db:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at" db:"updated_at"`
 }
 
 type PostRepo interface {
@@ -91,10 +91,11 @@ func (r postRepo) Get(id int) (*Post, error) {
 
 	query := `
 		SELECT
-			id, 
+			id,
 			user_id, 
 			title, 
 			content, 
+			slug, 
 			image_url, 
 			category, 
 			tags
@@ -121,6 +122,7 @@ func (r postRepo) List() ([]*Post, error) {
 			user_id,
 			title, 
 			content, 
+			slug,
 			image_url,
 			category, 
 			tags
@@ -144,26 +146,40 @@ func (r postRepo) Delete(id int) error {
 }
 
 func (r postRepo) Update(p Post) (*Post, error) {
+
+	if p.Title == "" {
+		return nil, fmt.Errorf("Title cannot be empty")
+	}
+
+	// Update slug if title has changed
+	p.Slug = slug.Make(p.Title)
+
 	query := `
 		UPDATE posts SET 
 			title=$1, 
 			content=$2, 
-			image_url=$3, 
-			category=$4, 
-			tags=$5 
-		WHERE id=$6
+			slug=$3,
+			image_url=$4, 
+			category=$5, 
+			tags=$6 
+		WHERE id=$7
 	`
-	_, err := r.db.Exec(query,
+	var updated Post
+	err := r.db.QueryRow(query,
 		p.Title,
 		p.Content,
+		p.Slug,
 		p.ImgURL,
 		p.Category,
 		pq.Array(p.Tags),
 		p.ID,
-	)
+	).Scan(&updated)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 
-	return &p, nil
+	return &updated, nil
 }

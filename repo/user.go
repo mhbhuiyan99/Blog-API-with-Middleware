@@ -77,7 +77,7 @@ func (r userRepo) Create(user User) (*User, error) {
 func (r userRepo) Find(email, password string) (*User, error) {
 	var user User
 	query := `
-		SELECT id, username, email, password, is_writer
+		SELECT id, username, email, password
 		FROM users
 		WHERE email=$1 AND password=$2
 		LIMIT 1
@@ -89,6 +89,7 @@ func (r userRepo) Find(email, password string) (*User, error) {
 		}
 		return nil, err
 	}
+	
 	return &user, err
 }
 

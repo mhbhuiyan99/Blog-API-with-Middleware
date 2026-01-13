@@ -2,6 +2,7 @@ package post
 
 import (
 	"blogAPI/util"
+	"fmt"
 	"net/http"
 	"strconv"
 )
@@ -17,6 +18,7 @@ func (h *Handler) GetPost(w http.ResponseWriter, r *http.Request) {
 
 	post, err := h.postRepo.Get(pId)
 	if err != nil {
+		fmt.Println(err)
 		util.SendError(w, "Failed to get post", http.StatusInternalServerError)
 		return
 	}

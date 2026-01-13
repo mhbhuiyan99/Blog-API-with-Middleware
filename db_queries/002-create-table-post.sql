@@ -4,7 +4,7 @@ CREATE TABLE posts (
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     image_url TEXT,
-    slug VARCHAR(255) UNIQUE NOT NULL, -- for SEO-friendly URLs
+    slug VARCHAR(255) NOT NULL, -- for SEO-friendly URLs
     category VARCHAR(100),
     tags TEXT[],                        -- PostgreSQL array for tags
     published BOOLEAN DEFAULT false,

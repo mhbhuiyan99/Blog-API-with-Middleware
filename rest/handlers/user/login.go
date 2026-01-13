@@ -21,15 +21,19 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	usr, err := h.userRepo.Find(req.Email, req.Password)
-	if err != nil {
+	if  err != nil{
 		util.SendError(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+	if usr == nil {
+		util.SendError(w, "User not found", http.StatusUnauthorized)
 		return
 	}
 
 	accessToken, err := util.CreateJWT(h.cnf.JwtSecretKey, util.Payload{
 		Sub:      usr.ID,
-		IsWriter: usr.IsWriter,
 		Username: usr.Username,
+		Email:    usr.Email,
 	})
 
 	util.SendData(w, accessToken, http.StatusOK)
