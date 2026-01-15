@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
+	"time"
 )
 
 type Header struct {
@@ -13,10 +14,12 @@ type Header struct {
 }
 
 type Payload struct {
-	Sub      int    `json:"sub"` // user id
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	IsWriter bool   `json:"is_writer"`
+	Sub            int    `json:"sub"` // user id
+	Username       string `json:"username"`
+	Email          string `json:"email"`
+	IsWriter       bool   `json:"is_writer"`
+	ExpirationTime int64  `json:"expiration_time"`
+	IssuedAt       int64  `json:"issued_at"`
 }
 
 func CreateJWT(secret string, data Payload) (string, error) {
@@ -24,6 +27,10 @@ func CreateJWT(secret string, data Payload) (string, error) {
 		Alg: "HS256",
 		Typ: "JWT",
 	}
+
+	// Set expiration time (7 days)
+	data.ExpirationTime = time.Now().Add(7 * 24 * time.Hour).Unix()
+	data.IssuedAt = time.Now().Unix()
 
 	// Marshal to convert into byte array
 	byteArrHeader, err := json.Marshal(header)

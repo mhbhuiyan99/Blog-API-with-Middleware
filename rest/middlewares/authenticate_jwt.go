@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+	"time"
 )
 
 // Adding struct for getting login user_id to create post
@@ -15,6 +16,9 @@ type Payload struct {
 	Sub      int    `json:"sub"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
+	IsWriter bool   `json:"is_writer"`
+	ExpirationTime int64  `json:"expiration_time"`
+	IssuedAt       int64  `json:"issued_at"`
 }
 
 /*
@@ -76,10 +80,17 @@ func (m *Middlewares) AuthenticateJWT(next http.Handler) http.Handler {
 			return
 		}
 
+		// Decode payloadBytes into Payload struct
 		var payload Payload
 		err = json.Unmarshal(payloadBytes, &payload)
 		if err != nil {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		// Check token expiration
+		if payload.ExpirationTime < time.Now().Unix() {
+			http.Error(w, "Token has expired", http.StatusUnauthorized)
 			return
 		}
 
