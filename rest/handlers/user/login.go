@@ -20,13 +20,16 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usr, err := h.userRepo.Find(req.Email, req.Password)
-	if  err != nil{
+	usr, err := h.userRepo.Find(req.Email)
+	if  err != nil || usr == nil{
 		util.SendError(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-	if usr == nil {
-		util.SendError(w, "User not found", http.StatusUnauthorized)
+
+	// bcrypt password comparison
+	err = util.CheckPasswordHash(req.Password, usr.Password)
+	if err != nil {
+		util.SendError(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 

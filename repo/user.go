@@ -24,7 +24,7 @@ type UserRepo interface {
 	List() ([]User, error)
 	Delete(userID int) error
 	Update(u User) (*User, error)
-	Find(email, password string) (*User, error)
+	Find(email string) (*User, error)
 }
 
 type userRepo struct {
@@ -74,15 +74,15 @@ func (r userRepo) Create(user User) (*User, error) {
 	return &user, nil
 }
 
-func (r userRepo) Find(email, password string) (*User, error) {
+func (r userRepo) Find(email string) (*User, error) {
 	var user User
+
 	query := `
 		SELECT id, username, email, password
 		FROM users
-		WHERE email=$1 AND password=$2
-		LIMIT 1
+		WHERE email=$1
 	`
-	err := r.db.Get(&user, query, email, password)
+	err := r.db.Get(&user, query, email)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil

@@ -12,7 +12,6 @@ type ReqCreateUser struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	IsWriter bool   `json:"is_writer"`
 }
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -25,11 +24,13 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// password hashing
+	req.Password = util.HashPassword(req.Password)
+
 	usr, err := h.userRepo.Create(repo.User{
 		Username: req.Username,
 		Email:    req.Email,
 		Password: req.Password,
-		IsWriter: req.IsWriter,
 	})
 
 	if err != nil {

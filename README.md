@@ -1,5 +1,5 @@
 
-**Loads env vars from a .env file:** 
+**Loads env variables from a .env file:**
 `go get github.com/joho/godotenv`
 <br>
 
@@ -11,6 +11,9 @@
 `go get github.com/lib/pq@latest`
 <br>
 
-**Generate a slug with Go:**
+**Generate slug:**
 `go get -u github.com/gosimple/slug`
+
+**Password hashing (bcrypt):**
+`go get golang.org/x/crypto/bcrypt`
 
