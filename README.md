@@ -17,3 +17,6 @@
 **Password hashing (bcrypt):**
 `go get golang.org/x/crypto/bcrypt`
 
+**Database (sql) Migration:**
+`go get -v github.com/rubenv/sql-migrate/...`
+
