@@ -1,7 +1,7 @@
 package user
 
 import (
-	"blogAPI/repo"
+	"blogAPI/domain"
 	"blogAPI/util"
 	"encoding/json"
 	"fmt"
@@ -27,7 +27,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	// password hashing
 	req.Password = util.HashPassword(req.Password)
 
-	usr, err := h.userRepo.Create(repo.User{
+	usr, err := h.svc.Create(domain.User{
 		Username: req.Username,
 		Email:    req.Email,
 		Password: req.Password,

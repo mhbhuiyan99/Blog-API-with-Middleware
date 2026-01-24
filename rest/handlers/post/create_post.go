@@ -1,7 +1,7 @@
 package post
 
 import (
-	"blogAPI/repo"
+	"blogAPI/domain"
 	"blogAPI/util"
 	"encoding/json"
 	"fmt"
@@ -35,7 +35,7 @@ func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	createPost, err := h.postRepo.Create(repo.Post{
+	createPost, err := h.svc.Create(domain.Post{
 		UserID:    userID,
 		Title:     req.Title,
 		Content:   req.Content,

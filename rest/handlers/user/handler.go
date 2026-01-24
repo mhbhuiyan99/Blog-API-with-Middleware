@@ -2,20 +2,19 @@ package user
 
 import (
 	"blogAPI/config"
-	"blogAPI/repo"
 )
 
 type Handler struct {
 	cnf      *config.Config
-	userRepo repo.UserRepo
+	svc 	 Service
 }
 
 func NewHandler(
 	cnf *config.Config,
-	userRepo repo.UserRepo,
+	svc Service,
 ) *Handler {
 	return &Handler{
-		cnf:      cnf,
-		userRepo: userRepo,
+		cnf: cnf,
+		svc: svc,
 	}
 }

@@ -1,35 +1,19 @@
 package repo
 
 import (
+	"blogAPI/domain"
+	"blogAPI/post"
 	"database/sql"
 	"fmt"
-	"time"
 
 	"github.com/gosimple/slug"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 )
 
-type Post struct {
-	ID        int            `json:"id" db:"id"`
-	UserID    int            `json:"user_id" db:"user_id"`
-	Title     string         `json:"title" db:"title"`
-	Slug      string         `json:"slug" db:"slug"`
-	Content   string         `json:"content" db:"content"`
-	ImgURL    string         `json:"img_url" db:"image_url"`
-	Category  string         `json:"category" db:"category"`
-	Tags      pq.StringArray `json:"tags" db:"tags"`
-	Published bool           `json:"published" db:"published"`
-	CreatedAt time.Time      `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at" db:"updated_at"`
-}
 
 type PostRepo interface {
-	Create(p Post) (*Post, error)
-	Get(id int) (*Post, error)
-	List() ([]*Post, error)
-	Delete(postID int) error
-	Update(p Post) (*Post, error)
+	post.PostRepo
 }
 
 type postRepo struct {
@@ -42,7 +26,7 @@ func NewPostRepo(db *sqlx.DB) PostRepo {
 	}
 }
 
-func (r postRepo) Create(p Post) (*Post, error) {
+func (r postRepo) Create(p domain.Post) (*domain.Post, error) {
 
 	// Generate slug from title
 	p.Slug = slug.Make(p.Title)
@@ -86,8 +70,8 @@ func (r postRepo) Create(p Post) (*Post, error) {
 	return &p, nil
 }
 
-func (r postRepo) Get(id int) (*Post, error) {
-	var post Post
+func (r postRepo) Get(id int) (*domain.Post, error) {
+	var post domain.Post
 
 	query := `
 		SELECT
@@ -113,8 +97,8 @@ func (r postRepo) Get(id int) (*Post, error) {
 	return &post, nil
 }
 
-func (r postRepo) List() ([]*Post, error) {
-	var postsList []*Post
+func (r postRepo) List() ([]*domain.Post, error) {
+	var postsList []*domain.Post
 
 	query := `
 		SELECT
@@ -145,7 +129,7 @@ func (r postRepo) Delete(id int) error {
 	return err
 }
 
-func (r postRepo) Update(p Post) (*Post, error) {
+func (r postRepo) Update(p domain.Post) (*domain.Post, error) {
 
 	if p.Title == "" {
 		return nil, fmt.Errorf("Title cannot be empty")
@@ -164,7 +148,7 @@ func (r postRepo) Update(p Post) (*Post, error) {
 			tags=$6 
 		WHERE id=$7
 	`
-	var updated Post
+	var updated domain.Post
 	err := r.db.QueryRow(query,
 		p.Title,
 		p.Content,

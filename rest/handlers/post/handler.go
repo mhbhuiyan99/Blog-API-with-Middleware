@@ -1,21 +1,20 @@
 package post
 
 import (
-	"blogAPI/repo"
 	middleware "blogAPI/rest/middlewares"
 )
 
 type Handler struct {
 	middlewares *middleware.Middlewares
-	postRepo    repo.PostRepo
+	svc Service
 }
 
 func NewHandler(
 	middlewares *middleware.Middlewares,
-	postRepo repo.PostRepo,
+	svc Service,
 ) *Handler {
 	return &Handler{
 		middlewares: middlewares,
-		postRepo:    postRepo,
+		svc:    svc,
 	}
 }

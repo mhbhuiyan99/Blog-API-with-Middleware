@@ -3,28 +3,13 @@ package repo
 import (
 	"database/sql"
 	"fmt"
-	"time"
-
+	"blogAPI/user"
 	"github.com/jmoiron/sqlx"
+	"blogAPI/domain"
 )
 
-type User struct {
-	ID        int       `json:"id" db:"id"`
-	Username  string    `json:"username" db:"username"`
-	Email     string    `json:"email" db:"email"`
-	Password  string    `json:"password" db:"password"`
-	IsWriter  bool      `json:"is_writer" db:"is_writer"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
-}
-
 type UserRepo interface {
-	Create(u User) (*User, error)
-	Get(id int) (*User, error)
-	List() ([]User, error)
-	Delete(userID int) error
-	Update(u User) (*User, error)
-	Find(email string) (*User, error)
+	user.UserRepo
 }
 
 type userRepo struct {
@@ -36,7 +21,7 @@ func NewUserRepo(db *sqlx.DB) UserRepo {
 		db: db,
 	}
 }
-func (r userRepo) Create(user User) (*User, error) {
+func (r userRepo) Create(user domain.User) (*domain.User, error) {
 	query := `
 		INSERT INTO users (
 			username,
@@ -74,8 +59,8 @@ func (r userRepo) Create(user User) (*User, error) {
 	return &user, nil
 }
 
-func (r userRepo) Find(email string) (*User, error) {
-	var user User
+func (r userRepo) Find(email string) (*domain.User, error) {
+	var user domain.User
 
 	query := `
 		SELECT id, username, email, password
@@ -93,17 +78,17 @@ func (r userRepo) Find(email string) (*User, error) {
 	return &user, err
 }
 
-func (u userRepo) Get(id int) (*User, error) {
+func (u userRepo) Get(id int) (*domain.User, error) {
 	return nil, nil
 }
 
-func (u userRepo) List() ([]User, error) {
+func (u userRepo) List() ([]domain.User, error) {
 	return nil, nil
 }
 
 func (u userRepo) Delete(userID int) error {
 	return nil
 }
-func (u userRepo) Update(usr User) (*User, error) {
+func (u userRepo) Update(usr domain.User) (*domain.User, error) {
 	return nil, nil
 }

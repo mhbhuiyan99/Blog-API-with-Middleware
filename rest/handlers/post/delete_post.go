@@ -25,7 +25,7 @@ func (h *Handler) DeletePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check the post exists and belongs to the authenticated user
-	existingPost, err := h.postRepo.Get(pId)
+	existingPost, err := h.svc.Get(pId)
 	if err != nil {
 		fmt.Println(err)
 		util.SendError(w, "Failed to fetch post", http.StatusInternalServerError)
@@ -40,7 +40,7 @@ func (h *Handler) DeletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.postRepo.Delete(pId)
+	err = h.svc.Delete(pId)
 	if err != nil {
 		fmt.Println(err)
 		util.SendError(w, "Failed to delete post", http.StatusInternalServerError)

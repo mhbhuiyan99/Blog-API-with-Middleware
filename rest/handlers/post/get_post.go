@@ -16,7 +16,7 @@ func (h *Handler) GetPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post, err := h.postRepo.Get(pId)
+	post, err := h.svc.Get(pId)
 	if err != nil {
 		fmt.Println(err)
 		util.SendError(w, "Failed to get post", http.StatusInternalServerError)

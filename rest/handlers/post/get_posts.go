@@ -6,7 +6,7 @@ import (
 )
 
 func (h *Handler) GetPosts(w http.ResponseWriter, r *http.Request) {
-	postList, err := h.postRepo.List()
+	postList, err := h.svc.List()
 	if err != nil {
 		util.SendError(w, "Failed to get posts", http.StatusInternalServerError)
 		return

@@ -20,7 +20,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	usr, err := h.userRepo.Find(req.Email)
+	usr, err := h.svc.Find(req.Email)
 	if  err != nil || usr == nil{
 		util.SendError(w, "Unauthorized", http.StatusUnauthorized)
 		return

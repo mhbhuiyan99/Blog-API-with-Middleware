@@ -1,7 +1,7 @@
 package post
 
 import (
-	"blogAPI/repo"
+	"blogAPI/domain"
 	"blogAPI/util"
 	"encoding/json"
 	"net/http"
@@ -37,7 +37,7 @@ func (h *Handler) UpdatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check the post exists and belongs to the authenticated user
-	existingPost, err := h.postRepo.Get(pId)
+	existingPost, err := h.svc.Get(pId)
 	if err != nil {
 		util.SendError(w, "Failed to fetch post", http.StatusInternalServerError)
 		return
@@ -59,7 +59,7 @@ func (h *Handler) UpdatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = h.postRepo.Update(repo.Post{
+	_, err = h.svc.Update(domain.Post{
 		ID:        pId,
 		UserID:    userID,
 		Title:     req.Title,
