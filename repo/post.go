@@ -97,7 +97,10 @@ func (r postRepo) Get(id int) (*domain.Post, error) {
 	return &post, nil
 }
 
-func (r postRepo) List() ([]*domain.Post, error) {
+func (r postRepo) List(page, limit int64) ([]*domain.Post, error) {
+	
+	offset := (page - 1)*limit + 1
+	
 	var postsList []*domain.Post
 
 	query := `
@@ -111,9 +114,10 @@ func (r postRepo) List() ([]*domain.Post, error) {
 			category, 
 			tags
 		FROM posts
-		ORDER BY created_at DESC
+		LIMIT $1
+		OFFSET $2
 		`
-	err := r.db.Select(&postsList, query)
+	err := r.db.Select(&postsList, query, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -166,4 +170,20 @@ func (r postRepo) Update(p domain.Post) (*domain.Post, error) {
 	}
 
 	return &updated, nil
+}
+
+func (r postRepo) Count() (int64, error) {
+	query := `
+	SELECT 
+		COUNT(*)
+	from posts
+	`
+	var count int 
+	err := r.db.QueryRow(query).Scan(&count)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int64(count), nil
 }

@@ -20,3 +20,6 @@
 **Database (sql) Migration:**
 `go get -v github.com/rubenv/sql-migrate/...`
 
+**Sends some load to a web application:**
+`go install github.com/rakyll/hey@latest`
+
