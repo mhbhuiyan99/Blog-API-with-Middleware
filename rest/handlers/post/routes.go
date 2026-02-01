@@ -27,6 +27,13 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager
 		))
 
 	mux.Handle(
+		"GET /my-posts/drafts",
+		manager.With(
+			http.HandlerFunc(h.GetDrafts),
+			h.middlewares.AuthenticateJWT,
+		))
+
+	mux.Handle(
 		"PUT /posts/{id}",
 		manager.With(
 			http.HandlerFunc(h.UpdatePost),

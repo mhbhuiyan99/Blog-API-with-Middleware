@@ -10,18 +10,18 @@ type Pagination struct {
 }
 
 type PaginatedData struct {
-	Data       any `json:"data"`
-	Pagination Pagination     `json:"pagination`
+	Data       any        `json:"data"`
+	Pagination Pagination `json:"pagination"`
 }
 
 func SendPage(w http.ResponseWriter, data any, page, limit, cnt int64) {
-	paginatedData := PaginatedData {
+	paginatedData := PaginatedData{
 		Data: data,
 		Pagination: Pagination{
-			Page: page,
-			Limit: limit,
+			Page:       page,
+			Limit:      limit,
 			TotalItems: cnt,
-			TotalPages: cnt/limit,
+			TotalPages: cnt / limit,
 		},
 	}
 	SendData(w, paginatedData, http.StatusOK)

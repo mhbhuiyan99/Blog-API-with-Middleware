@@ -99,20 +99,13 @@ func (r postRepo) Get(id int) (*domain.Post, error) {
 
 func (r postRepo) List(page, limit int64) ([]*domain.Post, error) {
 	
-	offset := (page - 1)*limit + 1
+	offset := (page - 1)*limit
 	
 	var postsList []*domain.Post
 
 	query := `
 		SELECT
-			id, 
-			user_id,
-			title, 
-			content, 
-			slug,
-			image_url,
-			category, 
-			tags
+			*
 		FROM posts
 		LIMIT $1
 		OFFSET $2
@@ -122,6 +115,27 @@ func (r postRepo) List(page, limit int64) ([]*domain.Post, error) {
 		return nil, err
 	}
 	return postsList, nil
+}
+
+func (r postRepo) Draft(userId, page, limit int64) ([]*domain.Post, error) {
+	
+	offset := (page - 1)*limit
+
+	var drafts []*domain.Post
+
+	query := `
+		SELECT
+			*
+		FROM posts
+		WHERE user_id = $1 AND published = FALSE
+		LIMIT $2
+		OFFSET $3
+		`
+	err := r.db.Select(&drafts, query, userId, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	return drafts, nil
 }
 
 func (r postRepo) Delete(id int) error {
@@ -149,8 +163,9 @@ func (r postRepo) Update(p domain.Post) (*domain.Post, error) {
 			slug=$3,
 			image_url=$4, 
 			category=$5, 
-			tags=$6 
-		WHERE id=$7
+			tags=$6,
+			published=$7
+		WHERE id=$8
 	`
 	var updated domain.Post
 	err := r.db.QueryRow(query,
@@ -160,6 +175,7 @@ func (r postRepo) Update(p domain.Post) (*domain.Post, error) {
 		p.ImgURL,
 		p.Category,
 		pq.Array(p.Tags),
+		p.Published,
 		p.ID,
 	).Scan(&updated)
 	if err != nil {
@@ -178,12 +194,29 @@ func (r postRepo) Count() (int64, error) {
 		COUNT(*)
 	from posts
 	`
-	var count int 
+	var count int64 
 	err := r.db.QueryRow(query).Scan(&count)
 
 	if err != nil {
 		return 0, err
 	}
 
-	return int64(count), nil
+	return count, nil
+}
+
+func (r postRepo) CountDrafts(userId int) (int64, error) {
+	query := `
+	SELECT 
+		COUNT(*)
+	from posts
+	WHERE user_id = $1 AND published = FALSE
+	`
+	var count int64 
+	err := r.db.QueryRow(query, userId).Scan(&count)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }

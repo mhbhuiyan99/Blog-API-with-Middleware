@@ -29,7 +29,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	// bcrypt password comparison
 	err = util.CheckPasswordHash(req.Password, usr.Password)
 	if err != nil {
-		util.SendError(w, "Unauthorized", http.StatusUnauthorized)
+		util.SendError(w, "Unauthorized: Wrong Password", http.StatusUnauthorized)
 		return
 	}
 
