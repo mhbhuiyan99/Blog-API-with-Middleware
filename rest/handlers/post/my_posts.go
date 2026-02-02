@@ -23,7 +23,7 @@ func (h *Handler) GetDrafts(w http.ResponseWriter, r *http.Request) {
 
 	userId := r.Context().Value("user_id").(int)
 
-	cnt, err := h.svc.CountMypost(userId, false)
+	cnt, err := h.svc.CountUserPost(userId, false)
 	if err != nil {
 		util.SendError(w, "Internal server error", http.StatusInternalServerError)
 		return
@@ -55,7 +55,7 @@ func (h *Handler) GetPublished(w http.ResponseWriter, r *http.Request) {
 
 	userId := r.Context().Value("user_id").(int)
 
-	cnt, err := h.svc.CountMypost(userId, true)
+	cnt, err := h.svc.CountUserPost(userId, true)
 	if err != nil {
 		util.SendError(w, "Internal server error", http.StatusInternalServerError)
 		return

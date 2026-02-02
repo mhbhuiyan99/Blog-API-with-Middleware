@@ -225,7 +225,7 @@ func (r postRepo) Count() (int64, error) {
 	return count, nil
 }
 
-func (r postRepo) CountMypost(userId int, isPublished bool) (int64, error) {
+func (r postRepo) CountUserPost(userId int, isPublished bool) (int64, error) {
 	query := `
 	SELECT 
 		COUNT(*)

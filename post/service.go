@@ -44,6 +44,6 @@ func (svc *service) Count() (int64, error) {
 	return svc.pstRepo.Count()
 }
 
-func (svc *service) CountMypost(userId int, isPublished bool) (int64, error) {
-	return svc.pstRepo.CountMypost(userId, isPublished)
+func (svc *service) CountUserPost(userId int, isPublished bool) (int64, error) {
+	return svc.pstRepo.CountUserPost(userId, isPublished)
 }

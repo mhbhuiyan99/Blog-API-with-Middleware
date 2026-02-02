@@ -11,5 +11,5 @@ type Service interface {
 	Draft (userId, page, limit int64) ([]*domain.Post, error)
 	Published (userId, page, limit int64) ([]*domain.Post, error)
 	Count() (int64, error)
-	CountMypost(userId int, isPublished bool) (int64, error)
+	CountUserPost(userId int, isPublished bool) (int64, error)
 }

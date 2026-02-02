@@ -19,5 +19,5 @@ type PostRepo interface {
 	Delete(postID int) error
 	Update(p domain.Post) (*domain.Post, error)
 	Count() (int64, error)
-	CountMypost(userId int, isPublished bool) (int64, error)
+	CountUserPost(userId int, isPublished bool) (int64, error)
 }
