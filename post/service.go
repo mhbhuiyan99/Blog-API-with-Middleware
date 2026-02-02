@@ -28,6 +28,10 @@ func (svc *service) Draft(userId, page, limit int64) ([]*domain.Post, error) {
 	return svc.pstRepo.Draft(userId, page, limit)
 }
 
+func (svc *service) Published(userId, page, limit int64) ([]*domain.Post, error) {
+	return svc.pstRepo.Published(userId, page, limit)
+}
+
 func (svc *service) Update(post domain.Post) (*domain.Post, error) {
 	return svc.pstRepo.Update(post)
 }
@@ -40,6 +44,6 @@ func (svc *service) Count() (int64, error) {
 	return svc.pstRepo.Count()
 }
 
-func (svc *service) CountDrafts(userId int) (int64, error) {
-	return svc.pstRepo.CountDrafts(userId)
+func (svc *service) CountMypost(userId int, isPublished bool) (int64, error) {
+	return svc.pstRepo.CountMypost(userId, isPublished)
 }

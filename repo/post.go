@@ -138,6 +138,27 @@ func (r postRepo) Draft(userId, page, limit int64) ([]*domain.Post, error) {
 	return drafts, nil
 }
 
+func (r postRepo) Published(userId, page, limit int64) ([]*domain.Post, error) {
+
+	offset := (page - 1)*limit
+
+	var publishedPosts []*domain.Post
+
+	query := `
+		SELECT
+			*
+		FROM posts
+		WHERE user_id = $1 AND published = TRUE
+		LIMIT $2
+		OFFSET $3
+		`
+	err := r.db.Select(&publishedPosts, query, userId, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	return publishedPosts, nil
+}
+
 func (r postRepo) Delete(id int) error {
 	query := `
 		DELETE FROM posts
@@ -192,7 +213,7 @@ func (r postRepo) Count() (int64, error) {
 	query := `
 	SELECT 
 		COUNT(*)
-	from posts
+	from posts WHERE published = TRUE
 	`
 	var count int64 
 	err := r.db.QueryRow(query).Scan(&count)
@@ -204,15 +225,15 @@ func (r postRepo) Count() (int64, error) {
 	return count, nil
 }
 
-func (r postRepo) CountDrafts(userId int) (int64, error) {
+func (r postRepo) CountMypost(userId int, isPublished bool) (int64, error) {
 	query := `
 	SELECT 
 		COUNT(*)
 	from posts
-	WHERE user_id = $1 AND published = FALSE
+	WHERE user_id = $1 AND published = $2
 	`
 	var count int64 
-	err := r.db.QueryRow(query, userId).Scan(&count)
+	err := r.db.QueryRow(query, userId, isPublished).Scan(&count)
 
 	if err != nil {
 		return 0, err
