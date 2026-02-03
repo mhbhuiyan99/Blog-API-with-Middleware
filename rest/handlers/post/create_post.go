@@ -35,6 +35,11 @@ func (h *Handler) CreatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err = util.ValidateTitle(req.Title); err != nil {
+		util.SendError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	createPost, err := h.svc.Create(domain.Post{
 		UserID:    userID,
 		Title:     req.Title,

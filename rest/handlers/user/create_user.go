@@ -24,6 +24,21 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err = util.ValidateUsername(req.Username); err != nil {
+		util.SendError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err = util.ValidateEmail(req.Email); err != nil {
+		util.SendError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err = util.ValidatePassword(req.Password); err != nil {
+		util.SendError(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	// password hashing
 	req.Password = util.HashPassword(req.Password)
 
