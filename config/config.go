@@ -18,12 +18,19 @@ type DBConfig struct {
 	EnableSSLMode bool
 }
 
+type RateLimiterConfig struct {
+	RPS     float64
+	Burst   int
+	Enabled bool
+}
+
 type Config struct {
 	Version      string
 	ServiceName  string
 	HttpPort     int
 	JwtSecretKey string
 	DB           *DBConfig
+	RateLimiter  *RateLimiterConfig
 }
 
 // loadConfig loads configuration from environment variables
@@ -117,12 +124,52 @@ func loadConfig() {
 		EnableSSLMode: enblSSLMode,
 	}
 
+	rateLimiterEnabled := os.Getenv("RATE_LIMITER_ENABLED")
+	if rateLimiterEnabled == "" {
+		rateLimiterEnabled = "true"
+	}
+
+	rlEnabled, err := strconv.ParseBool(rateLimiterEnabled)
+	if err != nil {
+		fmt.Println("Invalid RATE_LIMITER_ENABLED")
+		os.Exit(1)
+	}
+
+	rateLimiterRPS := os.Getenv("RATE_LIMITER_RPS")
+	if rateLimiterRPS == "" {
+		rateLimiterRPS = "2"
+	}
+
+	rlRPS, err := strconv.ParseFloat(rateLimiterRPS, 64)
+	if err != nil {
+		fmt.Println("Invalid RATE_LIMITER_RPS")
+		os.Exit(1)
+	}
+
+	rateLimiterBurst := os.Getenv("RATE_LIMITER_BURST")
+	if rateLimiterBurst == "" {
+		rateLimiterBurst = "4"
+	}
+
+	rlBurst, err := strconv.ParseInt(rateLimiterBurst, 10, 64)
+	if err != nil {
+		fmt.Println("Invalid RATE_LIMITER_BURST")
+		os.Exit(1)
+	}
+
+	rateLimiterConfig := &RateLimiterConfig{
+		RPS:     rlRPS,
+		Burst:   int(rlBurst),
+		Enabled: rlEnabled,
+	}
+
 	configurations = &Config{
 		Version:      version,
 		ServiceName:  serviceName,
 		HttpPort:     int(port),
 		JwtSecretKey: jwtSecretKey,
 		DB:           dbConfig,
+		RateLimiter:  rateLimiterConfig,
 	}
 }
 

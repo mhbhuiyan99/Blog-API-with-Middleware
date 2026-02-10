@@ -42,7 +42,7 @@ func Serve() {
 
 	// handlers
 	postHandler := pstHandler.NewHandler(middlewares, pstSvc)
-	userHandler := usrHandler.NewHandler(cnf, usrSvc)
+	userHandler := usrHandler.NewHandler(cnf, usrSvc, middlewares)
 
 	server := rest.NewServer(
 		cnf,

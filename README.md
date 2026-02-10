@@ -23,3 +23,11 @@
 **Sends some load to a web application:**
 `go install github.com/rakyll/hey@latest`
 
+**Rate Limiting:**
+`go get golang.org/x/time/rate@latest`
+<br>
+Test the rate limiting (Send 8 rapid requests): <br>
+
+`$ for i in {1..8}; do curl -s -w "Request $i: %{http_code}\n" http://localhost:4000/posts; done`
+
+`$ for i in {1..8}; do curl -s -w "Request $i: %{http_code}\n" http://localhost:4000/posts & done; wait`

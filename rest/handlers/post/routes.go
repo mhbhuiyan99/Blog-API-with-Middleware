@@ -12,18 +12,21 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager
 		manager.With(
 			http.HandlerFunc(h.CreatePost),
 			h.middlewares.AuthenticateJWT,
+			h.middlewares.RateLimit,
 		))
 	
 	mux.Handle(
 		"GET /posts",
 		manager.With(
 			http.HandlerFunc(h.GetPosts),
+			h.middlewares.RateLimit,
 		))
 
 	mux.Handle(
 		"GET /posts/{id}",
 		manager.With(
 			http.HandlerFunc(h.GetPost),
+			h.middlewares.RateLimit,
 		))
 
 	mux.Handle(
@@ -31,6 +34,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager
 		manager.With(
 			http.HandlerFunc(h.GetDrafts),
 			h.middlewares.AuthenticateJWT,
+			h.middlewares.RateLimit,
 		))
 	
 	mux.Handle(
@@ -38,12 +42,14 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager
 		manager.With(
 			http.HandlerFunc(h.GetPublished),
 			h.middlewares.AuthenticateJWT,
+			h.middlewares.RateLimit,
 		))
 	
 	mux.Handle(
 		"GET /users/{userId}/posts",
 		manager.With(
 			http.HandlerFunc(h.GetUserPosts),
+			h.middlewares.RateLimit,
 		))
 
 	mux.Handle(
@@ -51,6 +57,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager
 		manager.With(
 			http.HandlerFunc(h.UpdatePost),
 			h.middlewares.AuthenticateJWT,
+			h.middlewares.RateLimit,
 		))
 
 	mux.Handle(
@@ -58,6 +65,7 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager
 		manager.With(
 			http.HandlerFunc(h.DeletePost),
 			h.middlewares.AuthenticateJWT,
+			h.middlewares.RateLimit,
 		))
 
 }
