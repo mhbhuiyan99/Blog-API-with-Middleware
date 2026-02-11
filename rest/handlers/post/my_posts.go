@@ -1,6 +1,7 @@
 package post
 
 import (
+	"blogAPI/domain"
 	"blogAPI/util"
 	"net/http"
 	"strconv"
@@ -23,7 +24,12 @@ func (h *Handler) GetDrafts(w http.ResponseWriter, r *http.Request) {
 
 	userId := r.Context().Value("user_id").(int)
 
-	cnt, err := h.svc.CountUserPost(userId, false)
+	cnt, err := h.svc.TotalCount(
+		domain.CountOptions{
+			UserID: userId,
+			}, false,
+		)
+
 	if err != nil {
 		util.SendError(w, "Internal server error", http.StatusInternalServerError)
 		return
@@ -55,7 +61,12 @@ func (h *Handler) GetPublished(w http.ResponseWriter, r *http.Request) {
 
 	userId := r.Context().Value("user_id").(int)
 
-	cnt, err := h.svc.CountUserPost(userId, true)
+	cnt, err := h.svc.TotalCount(
+		domain.CountOptions{
+			UserID: userId,
+			}, true,
+		)
+
 	if err != nil {
 		util.SendError(w, "Internal server error", http.StatusInternalServerError)
 		return

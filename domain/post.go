@@ -1,8 +1,8 @@
 package domain
 
 import (
-	"time"
 	"github.com/lib/pq"
+	"time"
 )
 
 // model or entity >> existence
@@ -18,4 +18,11 @@ type Post struct {
 	Published bool           `json:"published" db:"published"`
 	CreatedAt time.Time      `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at" db:"updated_at"`
+}
+
+type CountOptions struct {
+	UserID    int   
+	Category  string
+	Tag       string
+	Keyword   string
 }

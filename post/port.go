@@ -18,6 +18,8 @@ type PostRepo interface {
 	Published(userId, page, limit int64) ([]*domain.Post, error)
 	Delete(postID int) error
 	Update(p domain.Post) (*domain.Post, error)
-	Count() (int64, error)
-	CountUserPost(userId int, isPublished bool) (int64, error)
+
+	TotalCount(options domain.CountOptions, isPublished bool) (int64, error)
+	GetByCategory(categoryID int, page, limit int64) ([]*domain.Post, error)
+	GetByTag(tagID int, page, limit int64) ([]*domain.Post, error)
 }

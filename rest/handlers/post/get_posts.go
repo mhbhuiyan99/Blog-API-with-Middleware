@@ -1,6 +1,7 @@
 package post
 
 import (
+	"blogAPI/domain"
 	"blogAPI/util"
 	"net/http"
 	"strconv"
@@ -23,7 +24,7 @@ func (h *Handler) GetPosts(w http.ResponseWriter, r *http.Request) {
 		limit = 10
 	}
 
-	cnt, err := h.svc.Count()
+	cnt, err := h.svc.TotalCount(domain.CountOptions{}, true)
 	if err != nil {
 		util.SendData(w, "Internal server error", http.StatusInternalServerError)
 		return
@@ -60,7 +61,12 @@ func (h *Handler) GetUserPosts(w http.ResponseWriter, r *http.Request) {
 		limit = 10
 	}
 
-	cnt, err := h.svc.CountUserPost(uId, true)
+	cnt, err := h.svc.TotalCount(
+		domain.CountOptions{
+			UserID: uId, 
+		}, true,
+	)
+
 	if err != nil {
 		util.SendError(w, "Internal server error", http.StatusInternalServerError)
 		return

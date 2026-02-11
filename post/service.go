@@ -37,13 +37,9 @@ func (svc *service) Update(post domain.Post) (*domain.Post, error) {
 }
 
 func (svc *service) Delete(id int) error {
-	return svc.Delete(id)
+	return svc.pstRepo.Delete(id)
 }
 
-func (svc *service) Count() (int64, error) {
-	return svc.pstRepo.Count()
-}
-
-func (svc *service) CountUserPost(userId int, isPublished bool) (int64, error) {
-	return svc.pstRepo.CountUserPost(userId, isPublished)
+func (svc *service) TotalCount(options domain.CountOptions, isPublished bool) (int64, error) {
+	return svc.pstRepo.TotalCount(options, isPublished)
 }
