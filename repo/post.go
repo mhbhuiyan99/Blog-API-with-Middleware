@@ -261,7 +261,7 @@ func (r postRepo) TotalCount(opts domain.CountOptions, isPublished bool) (int64,
 	return count, nil
 }
 
-func (r postRepo) GetByCategory(categoryID int, page, limit int64) ([]*domain.Post, error) {
+func (r postRepo) GetByCategory(category string, page, limit int64) ([]*domain.Post, error) {
 	offset := (page - 1)*limit
 
 	var postsList []*domain.Post
@@ -276,14 +276,14 @@ func (r postRepo) GetByCategory(categoryID int, page, limit int64) ([]*domain.Po
 		LIMIT $2
 		OFFSET $3
 	`
-	err := r.db.Select(&postsList, query, categoryID, limit, offset)
+	err := r.db.Select(&postsList, query, category, limit, offset)
 	if err != nil {
 		return nil, err
 	}
 	return postsList, nil
 }
 
-func (r postRepo) GetByTag(tagID int, page, limit int64) ([]*domain.Post, error) {
+func (r postRepo) GetByTag(tag string, page, limit int64) ([]*domain.Post, error) {
 	offset := (page - 1)*limit
 
 	var postsList []*domain.Post
@@ -297,7 +297,29 @@ func (r postRepo) GetByTag(tagID int, page, limit int64) ([]*domain.Post, error)
 		LIMIT $2
 		OFFSET $3
 	`
-	err := r.db.Select(&postsList, query, tagID, limit, offset)
+	err := r.db.Select(&postsList, query, tag, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	return postsList, nil
+}
+
+func (r postRepo) Search(keywords string, page, limit int64) ([]*domain.Post, error) {
+	offset := (page - 1)*limit
+
+	var postsList []*domain.Post
+
+	query := `
+		SELECT
+			*
+		FROM posts
+		WHERE (title ILIKE $1 OR content ILIKE $1 OR tags::text ILIKE $1 OR category ILIKE $1) AND published = TRUE
+		ORDER BY created_at DESC
+		LIMIT $2
+		OFFSET $3
+	`
+	searchTerm := "%" + keywords + "%"
+	err := r.db.Select(&postsList, query, searchTerm, limit, offset)
 	if err != nil {
 		return nil, err
 	}

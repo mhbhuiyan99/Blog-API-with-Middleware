@@ -11,4 +11,7 @@ type Service interface {
 	Draft(userId, page, limit int64) ([]*domain.Post, error)
 	Published(userId, page, limit int64) ([]*domain.Post, error)
 	TotalCount(options domain.CountOptions, isPublished bool) (int64, error)
+	GetByCategory(category string, page, limit int64) ([]*domain.Post, error)
+	GetByTag(tagID string, page, limit int64) ([]*domain.Post, error)
+	Search(keyword string, page, limit int64) ([]*domain.Post, error)
 }

@@ -20,6 +20,7 @@ type PostRepo interface {
 	Update(p domain.Post) (*domain.Post, error)
 
 	TotalCount(options domain.CountOptions, isPublished bool) (int64, error)
-	GetByCategory(categoryID int, page, limit int64) ([]*domain.Post, error)
-	GetByTag(tagID int, page, limit int64) ([]*domain.Post, error)
+	GetByCategory(category string, page, limit int64) ([]*domain.Post, error)
+	GetByTag(tag string, page, limit int64) ([]*domain.Post, error)
+	Search(keywords string, page, limit int64) ([]*domain.Post, error)
 }

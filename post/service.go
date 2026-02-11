@@ -40,6 +40,18 @@ func (svc *service) Delete(id int) error {
 	return svc.pstRepo.Delete(id)
 }
 
+func (svc *service) GetByCategory(category string, page, limit int64) ([]*domain.Post, error) {
+	return svc.pstRepo.GetByCategory(category, page, limit)
+}
+
+func (svc *service) GetByTag(tag string, page, limit int64) ([]*domain.Post, error) {
+	return svc.pstRepo.GetByTag(tag, page, limit)
+}
+
+func (svc *service) Search(keyword string, page, limit int64) ([]*domain.Post, error) {
+	return svc.pstRepo.Search(keyword, page, limit)
+}
+
 func (svc *service) TotalCount(options domain.CountOptions, isPublished bool) (int64, error) {
 	return svc.pstRepo.TotalCount(options, isPublished)
 }

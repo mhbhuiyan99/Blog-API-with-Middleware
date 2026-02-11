@@ -30,6 +30,28 @@ func (h *Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager
 		))
 
 	mux.Handle(
+		"GET /posts/category/{category}",
+		manager.With(
+			http.HandlerFunc(h.GetByCategory),
+			h.middlewares.RateLimit,
+		))
+	
+	mux.Handle(
+		"GET /posts/tag/{tag}",
+		manager.With(
+			http.HandlerFunc(h.GetByTag),
+			h.middlewares.RateLimit,
+		))
+	
+	mux.Handle(
+		"GET /posts/search",
+		manager.With(
+			http.HandlerFunc(h.Search),
+			h.middlewares.RateLimit,
+		))
+	
+
+	mux.Handle(
 		"GET /my-posts/drafts",
 		manager.With(
 			http.HandlerFunc(h.GetDrafts),
