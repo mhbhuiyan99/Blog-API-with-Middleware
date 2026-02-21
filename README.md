@@ -120,7 +120,7 @@ for i in {1..8}; do curl -s -w "Request $i: %{http_code}\n" http://localhost:400
 
 To test the graceful shutdown functionality, you can simulate long-running requests and then send an interrupt signal to the server.
 
-**Simulate a slow response and interrupt the server**:
+ - **Simulate a slow response and interrupt the server**:
     In one terminal, start a slow request:
     ```bash
     curl --limit-rate 1 http://localhost:4000/posts
