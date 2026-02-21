@@ -10,6 +10,7 @@ A professional, robust RESTful API for a blogging platform built with **Go**. Th
   - **JWT Authentication**: Ensures secure access to protected resources.
   - **Logging**: Structured request/response logging for better observability.
   - **CORS & Preflight**: Full support for Cross-Origin Resource Sharing.
+- **Graceful Shutdown**: Ensures all in-flight requests are completed before the server shuts down, preventing data loss and enhancing reliability.
 - **Comprehensive Post Management**:
   - Full CRUD operations for blog posts.
   - **Author-only Permissions**: Secure post modifications where only the original author can update or delete their content.
@@ -106,12 +107,26 @@ A professional, robust RESTful API for a blogging platform built with **Go**. Th
 | GET | `/my-posts/published` | Get current user's published posts | **Yes** |
 | GET | `/users/{userId}/posts` | Get posts by a specific user | No |
 
-## 🧪 Testing Rate Limiting
+## 🧪 Testing
+
+### Rate Limiting
 
 You can test the rate limiting middleware by sending rapid requests:
 ```bash
 for i in {1..8}; do curl -s -w "Request $i: %{http_code}\n" http://localhost:4000/posts; done
 ```
+
+### Graceful Shutdown
+
+To test the graceful shutdown functionality, you can simulate long-running requests and then send an interrupt signal to the server.
+
+**Simulate a slow response and interrupt the server**:
+    In one terminal, start a slow request:
+    ```bash
+    curl --limit-rate 1 http://localhost:4000/posts
+    ```
+    Immediately press `Ctrl+C` in the terminal running your server. If graceful shutdown works, the `curl` command will continue to receive data until the response finishes (or your 5s timeout kicks in).
+
 
 ## 🏗️ Project Structure
 

@@ -59,7 +59,6 @@ func Serve() {
 	go func() {
 		if err := server.Start(); err != nil && err != http.ErrServerClosed {
 			fmt.Println("Error starting the server: ", err)
-			os.Exit(1)
 		}
 	}()
 
