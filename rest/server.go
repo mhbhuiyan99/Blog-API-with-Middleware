@@ -5,9 +5,9 @@ import (
 	"blogAPI/rest/handlers/post"
 	"blogAPI/rest/handlers/user"
 	middleware "blogAPI/rest/middlewares"
+	"context"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 )
 
@@ -15,6 +15,7 @@ type Server struct {
 	cnf         *config.Config
 	postHandler *post.Handler
 	userHandler *user.Handler
+	httpServer  *http.Server
 }
 
 func NewServer(
@@ -29,7 +30,7 @@ func NewServer(
 	}
 }
 
-func (server *Server) Start() {
+func (server *Server) Start() error {
 	manager := middleware.NewManager()
 
 	manager.Use(
@@ -48,9 +49,15 @@ func (server *Server) Start() {
 	addr := ":" + strconv.Itoa(server.cnf.HttpPort)
 	fmt.Println("Server is running on port ", addr)
 
-	err := http.ListenAndServe(addr, wrappedMux)
-	if err != nil {
-		fmt.Println("Error starting the server: ", err)
-		os.Exit(1)
+	server.httpServer = &http.Server{
+		Addr:    addr,
+		Handler: wrappedMux,
 	}
+
+	err := server.httpServer.ListenAndServe()
+	return err
+}
+
+func (server *Server) Shutdown(ctx context.Context) error {
+	return server.httpServer.Shutdown(ctx)
 }
